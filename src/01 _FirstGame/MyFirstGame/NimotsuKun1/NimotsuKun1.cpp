@@ -11,8 +11,8 @@ const char initializeMap[] = "\
 #      #\n\
 ########";
 
-const int mapWidth = 8; // col
-const int mapHeight = 5; // row
+int mapWidth = 8; // col
+int mapHeight = 5; // row
 
 enum Object {
     OBJ_SPACE,      // 
@@ -31,7 +31,7 @@ enum Direction {
     DIR_LEFT        // left = 3
 };
 
-const int directions[4][2] = 
+int directions[4][2] = 
 {
     {-1, 0},         // up
     {0, 1},         // right
@@ -40,14 +40,14 @@ const int directions[4][2] =
 };
 
 char getSymbol(Object symbol);
-void initializeGame(Object**& myMap, const char* initializeMap, const int mapWidth, const int mapHeight, int& playerX, int& playerY);
-void deleteTheMap(Object**& myMap, const int mapHeight);
-bool checkGameOver(Object** myMap, const int mapWidth, const int mapHeight);
-bool movePlayer(Object** myMap, const int mapWidth, const int mapHeight, int curr_x, int curr_y, int des_x, int des_y);
-bool moveBox(Object** myMap, const int mapWidth, const int mapHeight, int curr_x, int curr_y, int des_x, int des_y);
+void initializeGame(Object**& myMap, const char* initializeMap, int mapWidth, int mapHeight, int& playerX, int& playerY);
+void deleteTheMap(Object**& myMap, int mapHeight);
+bool checkGameOver(Object** myMap, int mapWidth, int mapHeight);
+bool movePlayer(Object** myMap, int mapWidth, int mapHeight, int curr_x, int curr_y, int des_x, int des_y);
+bool moveBox(Object** myMap, int mapWidth, int mapHeight, int curr_x, int curr_y, int des_x, int des_y);
 void getInput(Direction& direction);
-void updateGame(Object** myMap, const int mapWidth, const int mapHeight, Direction direction, int& playerX, int& PlayerY);
-void draw(Object** myMap, const int mapWidth, const int mapHeight);
+void updateGame(Object** myMap, int mapWidth, int mapHeight, Direction direction, int& playerX, int& PlayerY);
+void draw(Object** myMap, int mapWidth, int mapHeight);
 
 int main()
 {
@@ -60,12 +60,14 @@ int main()
     // draw(myMap, mapWidth, mapHeight);
 
     while (true) {
+        system("cls");
         draw(myMap, mapWidth, mapHeight);
         if (checkGameOver(myMap, mapWidth, mapHeight)) {
             std::cout << "Congratulations! You win the game." << std::endl;
             break;
         }
         getInput(direction);
+
         updateGame(myMap, mapWidth, mapHeight, direction, playerX, playerY);
     }
     
@@ -125,7 +127,9 @@ char getSymbol(Object symbol)
     return 0;
 }
 
-void initializeGame(Object**& myMap, const char* initializeMap, const int mapWidth, const int mapHeight, int& playerX, int& playerY)
+//void initializeGameWithTheFile(Object**& myMap)
+
+void initializeGame(Object**& myMap, const char* initializeMap, int mapWidth, int mapHeight, int& playerX, int& playerY)
 {
     // allocate the map 
     myMap = new Object * [mapHeight];
@@ -150,7 +154,7 @@ void initializeGame(Object**& myMap, const char* initializeMap, const int mapWid
     }
 }
 
-void deleteTheMap(Object**& myMap, const int mapHeight)
+void deleteTheMap(Object**& myMap, int mapHeight)
 {
     for (int i = 0; i < mapHeight; i++) {
         delete[] myMap[i];
@@ -160,7 +164,7 @@ void deleteTheMap(Object**& myMap, const int mapHeight)
     myMap = nullptr;
 }
 
-bool checkGameOver(Object** myMap, const int mapWidth, const int mapHeight)
+bool checkGameOver(Object** myMap, int mapWidth, int mapHeight)
 {
     for (int i = 0; i < mapHeight; i++) {
         for (int j = 0; j < mapWidth; j++) {
@@ -173,7 +177,7 @@ bool checkGameOver(Object** myMap, const int mapWidth, const int mapHeight)
     return true;
 }
 
-bool movePlayer(Object** myMap, const int mapWidth, const int mapHeight, int curr_x, int curr_y, int des_x, int des_y)
+bool movePlayer(Object** myMap, int mapWidth, int mapHeight, int curr_x, int curr_y, int des_x, int des_y)
 {
     // the box has moved if it exists
     if (des_x < 0 || des_y < 0 || des_x >= mapHeight || des_y >= mapWidth) {
@@ -203,7 +207,7 @@ bool movePlayer(Object** myMap, const int mapWidth, const int mapHeight, int cur
 }
 
 // makesure myMap[curr_x][curr_y] is the box
-bool moveBox(Object** myMap, const int mapWidth, const int mapHeight, int curr_x, int curr_y, int des_x, int des_y)
+bool moveBox(Object** myMap, int mapWidth, int mapHeight, int curr_x, int curr_y, int des_x, int des_y)
 {
     if (des_x < 0 || des_y < 0 || des_x >= mapHeight || des_y >= mapWidth) {
         return false;
@@ -228,7 +232,7 @@ bool moveBox(Object** myMap, const int mapWidth, const int mapHeight, int curr_x
         myMap[curr_x][curr_y] = OBJ_GOAL;
     }
 
-    printf("move box: \n");
+    //printf("move box: \n");
     return true;
 }
 
@@ -256,10 +260,10 @@ void getInput(Direction& direction)
         }
     }
 
-    std::cout << direction << std::endl;
+    //std::cout << direction << std::endl;
 }
 
-void updateGame(Object** myMap, const int mapWidth, const int mapHeight, Direction direction, int& playerX, int& PlayerY)
+void updateGame(Object** myMap, int mapWidth, int mapHeight, Direction direction, int& playerX, int& PlayerY)
 {
     int currX(playerX), currY(PlayerY);
     int nextX = playerX + directions[direction][0];
@@ -275,12 +279,11 @@ void updateGame(Object** myMap, const int mapWidth, const int mapHeight, Directi
     if (movePlayer(myMap, mapWidth, mapHeight, currX, currY, nextX, nextY)) {
         playerX = nextX;
         PlayerY = nextY;
-        system("cls");
     }
 }
 
 
-void draw(Object** myMap, const int mapWidth, const int mapHeight)
+void draw(Object** myMap, int mapWidth, int mapHeight)
 {
     for (int i = 0; i < mapHeight; i++) {
         for (int j = 0; j < mapWidth; j++) {

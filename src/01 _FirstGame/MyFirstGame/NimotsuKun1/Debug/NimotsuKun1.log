@@ -1,3 +1,5 @@
 ﻿D:\zearo\application\Microsoft Visual Studio\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (NimotsuKun1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   NimotsuKun1.cpp
+C:\Users\86158\Desktop\precedure\game\游戏开发：世嘉新人培训教材\zearo\src\01 _FirstGame\MyFirstGame\NimotsuKun1\NimotsuKun1.cpp(168,39): warning C4018: '>': signed/unsigned mismatch
+C:\Users\86158\Desktop\precedure\game\游戏开发：世嘉新人培训教材\zearo\src\01 _FirstGame\MyFirstGame\NimotsuKun1\NimotsuKun1.cpp(191,16): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::string'
   NimotsuKun1.vcxproj -> C:\Users\86158\Desktop\precedure\game\游戏开发：世嘉新人培训教材\zearo\src\01 _FirstGame\MyFirstGame\Debug\NimotsuKun.exe

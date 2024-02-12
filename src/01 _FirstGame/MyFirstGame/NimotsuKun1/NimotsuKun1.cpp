@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <conio.h>
+#include <fstream>
+#include <string>
 
 const char initializeMap[] = "\
 ########\n\
@@ -10,9 +12,6 @@ const char initializeMap[] = "\
 # oo   #\n\
 #      #\n\
 ########";
-
-int mapWidth = 8; // col
-int mapHeight = 5; // row
 
 enum Object {
     OBJ_SPACE,      // 
@@ -40,6 +39,7 @@ int directions[4][2] =
 };
 
 char getSymbol(Object symbol);
+void initializeGameWithTheFile(Object**& myMap, const char* initializeMap, const char* fileName, int& mapWidth, int& mapHeight, int& playerX, int& playerY);
 void initializeGame(Object**& myMap, const char* initializeMap, int mapWidth, int mapHeight, int& playerX, int& playerY);
 void deleteTheMap(Object**& myMap, int mapHeight);
 bool checkGameOver(Object** myMap, int mapWidth, int mapHeight);
@@ -56,11 +56,14 @@ int main()
     int playerY(0);
     Direction direction;
 
-    initializeGame(myMap, initializeMap, mapWidth, mapHeight, playerX, playerY);
-    // draw(myMap, mapWidth, mapHeight);
+    int mapWidth = 8;  // col
+    int mapHeight = 5; // row
+    initializeGameWithTheFile(myMap, initializeMap, "map2.txt", mapWidth, mapHeight, playerX, playerY);
+    // initializeGame(myMap, initializeMap, mapWidth, mapHeight, playerX, playerY);
+    draw(myMap, mapWidth, mapHeight);
 
     while (true) {
-        system("cls");
+        /*system("cls");
         draw(myMap, mapWidth, mapHeight);
         if (checkGameOver(myMap, mapWidth, mapHeight)) {
             std::cout << "Congratulations! You win the game." << std::endl;
@@ -68,7 +71,7 @@ int main()
         }
         getInput(direction);
 
-        updateGame(myMap, mapWidth, mapHeight, direction, playerX, playerY);
+        updateGame(myMap, mapWidth, mapHeight, direction, playerX, playerY);*/
     }
     
     deleteTheMap(myMap, mapHeight);
@@ -127,16 +130,85 @@ char getSymbol(Object symbol)
     return 0;
 }
 
-//void initializeGameWithTheFile(Object**& myMap)
-
-void initializeGame(Object**& myMap, const char* initializeMap, int mapWidth, int mapHeight, int& playerX, int& playerY)
+void allocateTheMap(Object**& myMap, int mapWidth, int mapHeight)
 {
+    if (mapHeight < 0 || mapHeight < 0)
+    {
+        printf("ERROR.\n");
+        myMap = 0; // useless pointer is 0.
+        exit(0);
+    }
+
     // allocate the map 
     myMap = new Object * [mapHeight];
 
     for (int i = 0; i < mapHeight; i++) {
         myMap[i] = new Object[mapWidth];
     }
+}
+
+void initializeGameWithTheFile(Object**& myMap, const char* initializeMap, const char* fileName, int& mapWidth, int& mapHeight, int& playerX, int& playerY)
+{
+    std::ifstream in(fileName);
+    
+    if (!in.is_open()) {
+        myMap = 0; // error pointer
+        printf("Error creating map with the file.\n");
+        mapWidth = 8;
+        mapHeight = 5;
+        initializeGame(myMap, initializeMap, mapWidth, mapHeight, playerX, playerY);
+        return;
+    }
+
+    std::string line;
+    int lines(0);
+    int maxLineLength(0);
+
+    while (std::getline(in, line)) {
+        lines ++;
+        maxLineLength = line.length() > maxLineLength ? line.length() : maxLineLength;
+    }
+
+    in.close();
+
+    mapWidth = maxLineLength;
+    mapHeight = lines;
+
+    //printf("176 line:\n");
+    // allocate the space
+    allocateTheMap(myMap, mapWidth, mapHeight);
+    //printf("%d %d", mapWidth, mapHeight);
+
+    in.open(fileName);
+    if (!in.is_open()) {
+        printf("Cannot open the file.\n");
+        exit(0);
+    }
+
+    int currentLine = 0;
+    while (std::getline(in, line)) {
+        int i = 0;
+        int l = line.length();
+        //printf("%s \n", line);
+        for (i = 0; i < l; i++) {
+            char tempChar = line[i];
+            myMap[currentLine][i] = getObject(tempChar);
+            if (myMap[currentLine][i] == OBJ_PLAYER || myMap[currentLine][i] == OBJ_PLAYER_GOAL) {
+                playerX = currentLine;
+                playerY = i;
+            }
+        }
+        myMap[currentLine][mapWidth - 1] = OBJ_WALL;
+        currentLine++;
+    }
+
+    
+    in.close();
+}
+
+void initializeGame(Object**& myMap, const char* initializeMap, int mapWidth, int mapHeight, int& playerX, int& playerY)
+{
+    allocateTheMap(myMap, mapWidth, mapHeight);
 
     int flag = 0;
     // initialize the map
@@ -151,6 +223,7 @@ void initializeGame(Object**& myMap, const char* initializeMap, int mapWidth, in
         flag++;
         // TODO
         // error: flag is out of range .
+        // error: player does not exist
     }
 }
 

@@ -58,12 +58,12 @@ int main()
 
     int mapWidth = 8;  // col
     int mapHeight = 5; // row
-    initializeGameWithTheFile(myMap, initializeMap, "map2.txt", mapWidth, mapHeight, playerX, playerY);
+    initializeGameWithTheFile(myMap, initializeMap, "map3.txt", mapWidth, mapHeight, playerX, playerY);
     // initializeGame(myMap, initializeMap, mapWidth, mapHeight, playerX, playerY);
-    draw(myMap, mapWidth, mapHeight);
+    //draw(myMap, mapWidth, mapHeight);
 
     while (true) {
-        /*system("cls");
+        system("cls");
         draw(myMap, mapWidth, mapHeight);
         if (checkGameOver(myMap, mapWidth, mapHeight)) {
             std::cout << "Congratulations! You win the game." << std::endl;
@@ -71,7 +71,7 @@ int main()
         }
         getInput(direction);
 
-        updateGame(myMap, mapWidth, mapHeight, direction, playerX, playerY);*/
+        updateGame(myMap, mapWidth, mapHeight, direction, playerX, playerY);
     }
     
     deleteTheMap(myMap, mapHeight);
